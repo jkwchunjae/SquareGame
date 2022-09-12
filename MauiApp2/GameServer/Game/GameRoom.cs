@@ -89,6 +89,8 @@ internal class GameRoom : IGameRoom
     {
         using (await _lock.LockAsync())
         {
+            if (_board?.IsEnd ?? true)
+                return;
             if (socket == null)
                 return;
             if (_player1?.Socket != socket && _player2?.Socket != socket)
@@ -123,10 +125,10 @@ internal class GameRoom : IGameRoom
         {
             Cells = _board.GetBoard(),
             Width = _size,
-            Player1Name = _player1!.Name,
+            Player1Name = _player1?.Name ?? string.Empty,
             Player1Color = _board.GetColor(0, 0),
             Player1Score = _board.GetArea(0, 0),
-            Player2Name = _player2!.Name,
+            Player2Name = _player2?.Name ?? string.Empty,
             Player2Color = _board.GetColor(_lastIndex, _lastIndex),
             Player2Score = _board.GetArea(_lastIndex, _lastIndex),
         };

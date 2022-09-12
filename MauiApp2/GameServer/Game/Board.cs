@@ -44,9 +44,11 @@ internal class Board : IBoard
 
                 Edges(currentCell)
                     .Where(x => _cells[x.Row][x.Column] == initColor)
+                    .Where(x => !reserved.Contains(x))
+                    .Where(x => !queue.Contains(x))
                     .ForEach(cell =>
                     {
-                        reserved.Add(cell);
+                        queue.Enqueue(cell);
                     });
             }
 
@@ -60,9 +62,9 @@ internal class Board : IBoard
         {
             (int dx, int dy)[] dd = new[] { (-1, 0), (1, 0), (0, -1), (0, 1) };
             return dd
-                .Select(d => (currCell.Row + d.dx, currCell.Column + d.dy))
-                .Where(x => x.Item1 >= 0 && x.Item1 < _cells.Count)
-                .Where(x => x.Item2 >= 0 && x.Item2 < _cells[0].Count)
+                .Select(d => (Row: currCell.Row + d.dx, Column: currCell.Column + d.dy))
+                .Where(x => x.Row >= 0 && x.Row < _cells.Count)
+                .Where(x => x.Column >= 0 && x.Column < _cells[0].Count)
                 .ToList();
         }
     }
