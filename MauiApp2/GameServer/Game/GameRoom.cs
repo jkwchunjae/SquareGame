@@ -76,10 +76,10 @@ internal class GameRoom : IGameRoom
         {
             Cells = _board.GetBoard(),
             Width = _size,
-            Player1Name = _player1!.Name,
+            Player1Name = _player1?.Name ?? string.Empty,
             Player1Color = _board.GetColor(0, 0),
             Player1Score = _board.GetArea(0, 0),
-            Player2Name = _player2!.Name,
+            Player2Name = _player2?.Name ?? string.Empty,
             Player2Color = _board.GetColor(_lastIndex, _lastIndex),
             Player2Score = _board.GetArea(_lastIndex, _lastIndex),
         });
@@ -91,7 +91,7 @@ internal class GameRoom : IGameRoom
         {
             if (socket == null)
                 return;
-            if (_player1?.Socket == socket || _player2?.Socket == socket)
+            if (_player1?.Socket != socket && _player2?.Socket != socket)
                 return;
 
             var position = _player1?.Socket == socket ? (0, 0) : (_lastIndex, _lastIndex);
@@ -111,7 +111,8 @@ internal class GameRoom : IGameRoom
             else
             {
                 var nextUser = _player1?.Socket == socket ? _player2 : _player1;
-                await nextUser!.Socket.SendMessageAsync(new SC_YourTurn());
+                if (nextUser != null)
+                    await nextUser!.Socket.SendMessageAsync(new SC_YourTurn());
             }
         }
     }
