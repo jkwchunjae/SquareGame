@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Common;
 
@@ -51,7 +52,7 @@ public class CircularArray
         var readCount = 0;
         for (var i = offset; Any && i < offset + count; i++)
         {
-            arr[i] = _buffer[_beginIndex + readCount];
+            arr[i] = _buffer[(_beginIndex + readCount) % _size];
             readCount++;
         }
         _beginIndex = (_beginIndex + readCount) % _size;
@@ -63,7 +64,7 @@ public class CircularArray
         if (_beginIndex + length <= _size)
         {
             var str = Encoding.UTF8.GetString(_buffer, _beginIndex, length);
-            _beginIndex += length;
+            _beginIndex = (_beginIndex + length) % _size;
             return str;
         }
         else
