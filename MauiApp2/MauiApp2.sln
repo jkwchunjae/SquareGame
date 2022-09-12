@@ -6,11 +6,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiApp2", "MauiApp2\MauiAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameServer", "GameServer\GameServer.csproj", "{A6E9B291-DE42-4CF6-AFF7-92B1CB199516}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{3B4B751C-7E0B-45B3-BA1C-102D4F05EE0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{3B4B751C-7E0B-45B3-BA1C-102D4F05EE0B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{546D36B8-6B56-4947-BE30-8EE8C84CD7F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Test", "Common.Test\Common.Test.csproj", "{8434786E-1E1F-4813-A7C1-F37A7B3F4755}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Test", "Common.Test\Common.Test.csproj", "{8434786E-1E1F-4813-A7C1-F37A7B3F4755}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
