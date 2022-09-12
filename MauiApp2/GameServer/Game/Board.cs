@@ -108,9 +108,11 @@ internal class Board : IBoard
 
                 Edges(currentCell)
                     .Where(x => _cells[x.Row][x.Column] == initColor)
+                    .Where(x => !reserved.Contains(x))
+                    .Where(x => !queue.Contains(x))
                     .ForEach(cell =>
                     {
-                        reserved.Add(cell);
+                        queue.Enqueue(cell);
                     });
             }
 
