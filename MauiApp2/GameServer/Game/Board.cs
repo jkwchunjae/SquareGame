@@ -144,6 +144,7 @@ internal class Board : IBoard
                 return string.Empty;
 
             return _cells
+                .Select(row => new string(row.ToArray()))
                 .StringJoin("");
         }
     }
