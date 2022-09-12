@@ -9,13 +9,13 @@ internal class PacketJsonConverter : JsonConverter<PacketBase>
     public override PacketBase? ReadJson(JsonReader reader, Type objectType, PacketBase? existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
         JObject? objLogData = serializer.Deserialize(reader) as JObject;
-        var logTypeEnum = objLogData?.Value<PacketType>("Type");
+        var logTypeEnum = objLogData?.Value<string>("Type");
 
         if (logTypeEnum == null)
         {
             throw new PacketJsonConvertException();
         }
-        var packetType = Type.GetType(logTypeEnum?.ToString() ?? string.Empty);
+        var packetType = Assembly.GetAssembly(typeof(PacketType))!.GetTypes().FirstOrDefault(t => t.Name == logTypeEnum?.ToString());
         if (packetType == null)
             return new PacketBase();
 
@@ -36,7 +36,7 @@ internal class PacketJsonConverter : JsonConverter<PacketBase>
     public override void WriteJson(JsonWriter writer, PacketBase? packetData, JsonSerializer serializer)
     {
         var logTypeEnum = packetData?.Type;
-        var packetType = Type.GetType(logTypeEnum?.ToString() ?? string.Empty);
+        var packetType = Assembly.GetAssembly(typeof(PacketType))!.GetTypes().FirstOrDefault(t => t.Name == logTypeEnum?.ToString());
 
         if (packetType == null)
             throw new PacketJsonConvertException();
