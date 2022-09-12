@@ -1,0 +1,84 @@
+﻿<h3>GameBoard</h3>
+
+@if (MyRole == Common.Packet.UserRole.Player)
+{
+    <div>플레이어 입니다.</div>
+}
+else
+{
+    <div>관전자 입니다.</div>
+}
+
+@if (IsMyTurn)
+{
+    <div>당신 차례입니다.</div>
+}
+else
+{
+    <div>상대방 차례입니다.</div>
+}
+
+@if (Board != null)
+{
+    <span>@Board.ToString()</span>
+<table class="game-table">
+  @foreach (var row in Enumerable.Range(0, Board.Size))
+  {
+  <tr class="game-tr">
+    @foreach (var column in Enumerable.Range(0, Board.Size))
+    {
+      var text = $"({row},{column})";
+      char color = Board.GetColor(row, column);
+      string buttonClass = $"game-button color-{color}";
+      <td class="game-td">
+        <button onclick="@(() => Pick(color))" class="@buttonClass">&nbsp;</button>
+      </td>
+    }
+  </tr>
+  }
+</table>
+}
+
+<style>
+table.game-table {
+
+}
+
+tr.game-tr {
+
+}
+
+td.game-td {
+  padding: 0;
+}
+
+button.game-button {
+  border: none;
+  width: 30px;
+  height: 30px;
+}
+
+.color-A {
+    background-color: #DBB7EE;
+}
+
+.color-B {
+    background-color: #F8CBAD;
+}
+
+.color-C {
+    background-color: #FFE699;
+}
+
+.color-D {
+    background-color: #C6E0B4;
+}
+
+.color-E {
+    background-color: #FF9595;
+}
+
+.color-F {
+    background-color: #999999;
+}
+</style>
