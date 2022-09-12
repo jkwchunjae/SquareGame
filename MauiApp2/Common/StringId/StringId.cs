@@ -73,20 +73,3 @@ public class StringId : IComparable<StringId>, IEquatable<StringId>
         return Id.GetHashCode();
     }
 }
-
-public class StringName : StringId
-{
-    [JsonIgnore]
-    public string Name
-    {
-        get => Id;
-        set => Id = value;
-    }
-
-    public StringName() { }
-
-    public StringName(string name)
-        : base(name)
-    {
-    }
-}

@@ -1,12 +1,8 @@
-﻿using System.Net.Sockets;
+﻿using Common.Packet;
 
 public interface ISocketEx
 {
-}
-
-public class SocketEx : ISocketEx
-{
-    public SocketEx(Socket socket)
-    {
-    }
+    void Close();
+    Task<(int MessageLength, PacketBase? Message)> ReceiveMessageAsync(CancellationToken ct = default);
+    Task SendMessageAsync(PacketBase message, CancellationToken ct = default);
 }
