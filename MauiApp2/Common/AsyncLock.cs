@@ -1,6 +1,6 @@
 ﻿namespace Common;
 
-internal class AsyncLock
+public class AsyncLock
 {
     public struct Unlocker : IDisposable
     {
