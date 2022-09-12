@@ -1,0 +1,19 @@
+﻿
+
+<button onclick="@(() => Connect())">Connect</button>
+
+<button onclick="@(() => Ping())">Ping</button>
+
+<table>
+  @foreach (var data in TableData)
+  {
+    <tr>
+      <td>
+        @data.Time
+      </td>
+      <td>
+        @data.Type
+      </td>
+    </tr>
+  }
+</table>
