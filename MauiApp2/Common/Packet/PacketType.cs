@@ -7,6 +7,12 @@ namespace Common.Packet;
 public enum PacketType
 {
     CS_Ping,
+    CS_Login,
+    CS_Pick,
 
     SC_Pong,
+    SC_YourRole,
+    SC_Board,
+    SC_YourTurn,
+    SC_Result,
 }
