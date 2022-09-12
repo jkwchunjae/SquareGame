@@ -8,6 +8,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameServer", "GameServer\Ga
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{3B4B751C-7E0B-45B3-BA1C-102D4F05EE0B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{546D36B8-6B56-4947-BE30-8EE8C84CD7F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Test", "Common.Test\Common.Test.csproj", "{8434786E-1E1F-4813-A7C1-F37A7B3F4755}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +32,16 @@ Global
 		{3B4B751C-7E0B-45B3-BA1C-102D4F05EE0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B4B751C-7E0B-45B3-BA1C-102D4F05EE0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B4B751C-7E0B-45B3-BA1C-102D4F05EE0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8434786E-1E1F-4813-A7C1-F37A7B3F4755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8434786E-1E1F-4813-A7C1-F37A7B3F4755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8434786E-1E1F-4813-A7C1-F37A7B3F4755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8434786E-1E1F-4813-A7C1-F37A7B3F4755}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8434786E-1E1F-4813-A7C1-F37A7B3F4755} = {546D36B8-6B56-4947-BE30-8EE8C84CD7F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
