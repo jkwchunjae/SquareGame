@@ -8,28 +8,24 @@ internal class PacketJsonConverter : JsonConverter<PacketBase>
 {
     public override PacketBase? ReadJson(JsonReader reader, Type objectType, PacketBase? existingValue, bool hasExistingValue, JsonSerializer serializer)
     {
-        JObject? objLogData = serializer.Deserialize(reader) as JObject;
-        var logTypeEnum = objLogData?.Value<string>("Type");
-
-        if (logTypeEnum == null)
-        {
+        JObject? objData = serializer.Deserialize(reader) as JObject;
+        var typeName = objData?.Value<string>("Type");
+        if (typeName == null)
             throw new PacketJsonConvertException();
-        }
-        var packetType = Assembly.GetAssembly(typeof(PacketType))!.GetTypes().FirstOrDefault(t => t.Name == logTypeEnum?.ToString());
+
+        var packetType = Assembly.GetAssembly(typeof(PacketType))!.GetTypes().FirstOrDefault(t => t.Name == typeName?.ToString());
         if (packetType == null)
             return new PacketBase();
 
         PacketBase? packetData = Activator.CreateInstance(packetType) as PacketBase;
-
         foreach (var prop in packetType.GetProperties())
         {
             var jsonPropertyAttr = prop.GetCustomAttribute<JsonPropertyAttribute>();
             var propertyName = jsonPropertyAttr?.PropertyName ?? prop.Name;
-            var property = objLogData?.Properties().FirstOrDefault(p => p.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
+            var property = objData?.Properties().FirstOrDefault(p => p.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase));
             var value = property?.Value?.ToObject(prop.PropertyType);
             prop.SetValue(packetData, value);
         }
-
         return packetData;
     }
 
