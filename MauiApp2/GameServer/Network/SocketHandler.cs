@@ -30,13 +30,13 @@ internal class SocketHandler : ISocketHandler
 
             while (true)
             {
-                Console.WriteLine("Waiting for a connection...");
+                Console.WriteLine("Waiting for a connection....");
                 var socket = await listener.AcceptAsync();
                 var socketEx = new SocketEx(socket);
 
                 OnConnect?.Invoke(this, socketEx);
 
-                HandleConnection(new SocketEx(socket));
+                Task.Run(async () => await HandleConnection(new SocketEx(socket)));
             }
         }
         catch (Exception e)
@@ -45,7 +45,7 @@ internal class SocketHandler : ISocketHandler
         }
     }
 
-    private async void HandleConnection(ISocketEx client)
+    private async Task HandleConnection(ISocketEx client)
     {
         try
         {

@@ -9,6 +9,10 @@ Console.WriteLine("Hello, World!");
 IGameRoom gameRoom = new GameRoom();
 
 ISocketHandler socketHandler = new SocketHandler();
+socketHandler.OnConnect += (_, e) =>
+{
+    Console.WriteLine("Client connected !!");
+};
 socketHandler.OnMessage += async (_, e) =>
 {
     var (client, packetBase) = e;

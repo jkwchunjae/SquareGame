@@ -1,6 +1,7 @@
 ﻿using Common.Packet;
 using Common.Packet.ClientToServer;
 using Common.Packet.ServerToClient;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -32,8 +33,14 @@ public class GameService : IGameService
         try
         {
             _connection?.Close();
+        }
+        catch
+        {
+        }
 
-            IPEndPoint remoteEp = new IPEndPoint(ip, 55190);
+        try
+        {
+            IPEndPoint remoteEp = new IPEndPoint(ip, port);
 
             Socket server = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             await server.ConnectAsync(remoteEp);
@@ -46,6 +53,7 @@ public class GameService : IGameService
         {
             _connection?.Close();
             _connection = null;
+            Trace.WriteLine(ex.Message);
             Disconnected?.Invoke(this, null);
         }
     }
