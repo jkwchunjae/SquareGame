@@ -39,6 +39,8 @@ internal class GameRoom : IGameRoom
             {
                 _player1 = user;
                 await user.Socket.SendMessageAsync(new SC_YourRole { Role = UserRole.Player });
+
+                await StartGame(); // TEST
             }
             else if (_player2 == null)
             {
