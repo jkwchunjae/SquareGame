@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "GameServer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "publishAllPorts": true,
+      "port": 55190
+    }
+  }
+}
