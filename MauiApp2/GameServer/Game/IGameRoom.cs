@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using Common.Network;
 
 namespace GameServer.Game;
 

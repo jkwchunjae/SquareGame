@@ -1,40 +1,31 @@
-﻿using Common;
-using Common.Packet;
+﻿using Common.Packet;
 using Newtonsoft.Json;
 using System.Net.Sockets;
 using System.Text;
 
 namespace Common.Network;
 
-public class SocketEx : ISocketEx
+public class SocketTcp : ISocketEx
 {
-    private Socket _socket;
+    NetworkStream _stream;
+    TcpClient _client;
+
     private CircularArray _recvBuffer = new CircularArray(10000);
     private byte[] _messageLengthBuffer = new byte[sizeof(int)];
     private byte[] _sendBuffer = new byte[10000];
 
     private AsyncLock _sendLock = new AsyncLock();
+    public bool Connected => _client?.Connected ?? false;
 
-    public bool Connected => _socket?.Connected ?? false;
-
-    public SocketEx(Socket socket)
+    public SocketTcp(TcpClient client)
     {
-        _socket = socket;
-    }
-
-    public void Dispose()
-    {
-        _socket?.Dispose();
-    }
-
-    public void Disconnect(bool reuseSocket)
-    {
-        _socket?.Disconnect(reuseSocket);
+        _client = client;
+        _stream = client.GetStream();
     }
 
     public void Close()
     {
-        _socket?.Close();
+        _stream.Close();
     }
 
     #region Receive
@@ -77,7 +68,7 @@ public class SocketEx : ISocketEx
     private async Task<int> FillRecvBufferAsync(CancellationToken ct)
     {
         var memory = _recvBuffer.GetWritableMemory();
-        var count = await _socket.ReceiveAsync(memory, SocketFlags.None, ct);
+        var count = await _stream.ReadAsync(memory, ct);
         _recvBuffer.ShiftEndIndex(count);
 
         return count;
@@ -101,7 +92,7 @@ public class SocketEx : ISocketEx
             _sendBuffer[2] = (byte)((byteLength >> 16) & 255);
             _sendBuffer[3] = (byte)((byteLength >> 24) & 255);
 
-            await _socket.SendAsync(new Memory<byte>(_sendBuffer, 0, byteLength + sizeof(int)), SocketFlags.None, ct);
+            await _stream.WriteAsync(new Memory<byte>(_sendBuffer, 0, byteLength + sizeof(int)), ct);
         }
     }
     #endregion

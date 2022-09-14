@@ -1,4 +1,5 @@
-﻿using Common.Packet;
+﻿using Common.Network;
+using Common.Packet;
 
 namespace GameServer.Network;
 

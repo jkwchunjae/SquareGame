@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using Common.Packet;
+using Common.Network;
 
 namespace GameServer.Network;
 
@@ -17,26 +18,23 @@ internal class SocketHandler : ISocketHandler
 
     private async Task StartListening(int port)
     {
-        IPAddress ipAddress = IPAddress.Any;
-        IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
-
-        Socket listener = new Socket(ipAddress.AddressFamily,
-            SocketType.Stream, ProtocolType.Tcp);
-
         try
         {
-            listener.Bind(localEndPoint);
-            listener.Listen(100);
+            IPAddress ipAddress = IPAddress.Any;
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
+
+            TcpListener server = new TcpListener(ipAddress, port);
+            server.Start();
 
             while (true)
             {
                 Console.WriteLine("Waiting for a connection....");
-                var socket = await listener.AcceptAsync();
-                var socketEx = new SocketEx(socket);
+                var client = await server.AcceptTcpClientAsync();
+                ISocketEx socketEx = new SocketTcp(client);
 
                 OnConnect?.Invoke(this, socketEx);
 
-                Task.Run(async () => await HandleConnection(new SocketEx(socket)));
+                Task.Run(async () => await HandleConnection(socketEx));
             }
         }
         catch (Exception e)

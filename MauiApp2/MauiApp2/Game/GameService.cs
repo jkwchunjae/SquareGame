@@ -1,4 +1,5 @@
-﻿using Common.Packet;
+﻿using Common.Network;
+using Common.Packet;
 using Common.Packet.ClientToServer;
 using Common.Packet.ServerToClient;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ public class GameService : IGameService
     public event EventHandler<SC_Board> OnBoard;
     public event EventHandler<SC_Result> OnResult;
 
-    SocketEx _connection;
+    ISocketEx _connection;
     UserRole _myRole = UserRole.Spectator;
     public async Task Login(IPAddress ip, int port, string name)
     {
@@ -41,10 +42,10 @@ public class GameService : IGameService
         try
         {
             IPEndPoint remoteEp = new IPEndPoint(ip, port);
+            TcpClient client = new TcpClient();
+            await client.ConnectAsync(remoteEp);
 
-            Socket server = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            await server.ConnectAsync(remoteEp);
-            _connection = new SocketEx(server);
+            _connection = new SocketTcp(client);
             await _connection.SendMessageAsync(new CS_Login { Name = name });
 
             Task.Run(async () => await HandleReceiveAsync());

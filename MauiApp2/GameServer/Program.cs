@@ -1,4 +1,5 @@
-﻿using Common.Packet;
+﻿using Common.Network;
+using Common.Packet;
 using Common.Packet.ClientToServer;
 using Common.Packet.ServerToClient;
 using GameServer.Game;

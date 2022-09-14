@@ -1,4 +1,5 @@
-﻿using Common.Packet.ClientToServer;
+﻿using Common.Network;
+using Common.Packet.ClientToServer;
 using Common.Packet.ServerToClient;
 using Newtonsoft.Json.Linq;
 using System.Net;
@@ -8,7 +9,7 @@ namespace MauiApp2.Components;
 
 public partial class PingPong
 {
-    SocketEx connection;
+    ISocketEx connection;
     List<(DateTime Time, string Type)> TableData = new();
     private async Task Connect()
     {
@@ -16,12 +17,12 @@ public partial class PingPong
         {
             connection?.Close();
 
-            var ip = IPAddress.Loopback;
-            IPEndPoint remoteEp = new IPEndPoint(ip, 55300);
+            IPEndPoint remoteEp = new IPEndPoint(IPAddress.Loopback, 55300);
+            TcpClient client = new TcpClient();
 
-            Socket server = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            await server.ConnectAsync(remoteEp);
-            connection = new SocketEx(server);
+            await client.ConnectAsync(remoteEp);
+
+            connection = new SocketTcp(client);
             TableData.Add((DateTime.Now, "Connected"));
             StateHasChanged();
 

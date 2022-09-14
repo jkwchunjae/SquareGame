@@ -1,4 +1,6 @@
-﻿namespace GameServer.Game;
+﻿using Common.Network;
+
+namespace GameServer.Game;
 
 internal class User
 {
