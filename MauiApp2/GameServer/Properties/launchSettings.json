@@ -6,7 +6,7 @@
     "Docker": {
       "commandName": "Docker",
       "publishAllPorts": true,
-      "port": 55190
+      "port": 55300
     }
   }
 }

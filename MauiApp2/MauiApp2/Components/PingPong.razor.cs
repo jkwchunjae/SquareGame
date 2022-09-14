@@ -17,7 +17,7 @@ public partial class PingPong
             connection?.Close();
 
             var ip = IPAddress.Loopback;
-            IPEndPoint remoteEp = new IPEndPoint(ip, 55190);
+            IPEndPoint remoteEp = new IPEndPoint(ip, 55300);
 
             Socket server = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             await server.ConnectAsync(remoteEp);

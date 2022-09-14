@@ -25,7 +25,7 @@ socketHandler.OnMessage += async (_, e) =>
     }
 };
 
-await socketHandler.Run(55190);
+await socketHandler.Run(55300);
 
 async Task OnPing(ISocketEx client, CS_Ping pingPacket)
 {

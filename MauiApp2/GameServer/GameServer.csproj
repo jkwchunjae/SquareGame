@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileRunArguments>-p 127.0.0.1:55190:55190</DockerfileRunArguments>
+    <DockerfileRunArguments>-p 127.0.0.1:55300:55300/tcp</DockerfileRunArguments>
   </PropertyGroup>
 
   <ItemGroup>

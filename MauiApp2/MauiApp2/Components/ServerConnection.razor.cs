@@ -10,7 +10,7 @@ public partial class ServerConnection
     [Inject] IGameService GameService { get; set; }
 
     private string IpAddress = "localhost";
-    private string Port = "55190";
+    private string Port = "55300";
     private string Name = "경원";
 
     private async Task Login()
