@@ -22,6 +22,7 @@ public class SC_Board : PacketBase
 {
     public int Width { get; set; }
     public string? Cells { get; set; }
+    public string? CurrentPlayerName { get; set; }
     public string? Player1Name { get; set; }
     public string? Player2Name { get; set; }
     public int Player1Score { get; set; }
@@ -31,14 +32,6 @@ public class SC_Board : PacketBase
     public SC_Board()
     {
         Type = PacketType.SC_Board;
-    }
-}
-
-public class SC_YourTurn : PacketBase
-{
-    public SC_YourTurn()
-    {
-        Type = PacketType.SC_YourTurn;
     }
 }
 

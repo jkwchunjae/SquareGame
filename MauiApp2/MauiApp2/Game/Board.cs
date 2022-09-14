@@ -6,21 +6,23 @@ internal class Board
 
     private string _board;
     private List<List<char>> _cells;
+    private bool _isReverse;
 
-    public Board(int size, string board)
+    public Board(int size, string board, bool isReverse)
     {
+        _isReverse = isReverse;
         Size = size;
-        _board = board;
+        _board = isReverse ? new string(board.Reverse().ToArray()) : board;
         _cells = Enumerable.Range(0, size)
-            .Select(row => board.Substring(row * size, size).Select(c => c).ToList())
+            .Select(row => _board.Substring(row * size, size).Select(c => c).ToList())
             .ToList();
     }
 
     public void Update(string board)
     {
-        _board = board;
+        _board = _isReverse ? new string(board.Reverse().ToArray()) : board;
         _cells = Enumerable.Range(0, Size)
-            .Select(row => board.Substring(row * Size, Size).Select(c => c).ToList())
+            .Select(row => _board.Substring(row * Size, Size).Select(c => c).ToList())
             .ToList();
     }
 

@@ -18,7 +18,6 @@ public partial class GameBoard
         if (firstRender)
         {
             GameService.OnYourRole += GameService_OnYourRole;
-            GameService.OnYourTurn += GameService_OnYourTurn;
             GameService.OnBoard += GameService_OnBoard;
             GameService.OnResult += GameService_OnResult;
         }
@@ -42,30 +41,15 @@ public partial class GameBoard
         }
     }
 
-    private void GameService_OnYourTurn(object sender, SC_YourTurn e)
-    {
-        Action action = () =>
-        {
-            IsMyTurn = true;
-            StateHasChanged();
-        };
-        if (MainThread.IsMainThread)
-        {
-            action();
-        }
-        else
-        {
-            MainThread.BeginInvokeOnMainThread(action);
-        }
-    }
-
     private void GameService_OnBoard(object sender, SC_Board e)
     {
         Action action = () =>
         {
             if (Board == null)
             {
-                Board = new Board(e.Width, e.Cells);
+                var isReverse = e.Player2Name == GameService.MyName;
+                Board = new Board(e.Width, e.Cells, isReverse);
+                IsMyTurn = e.CurrentPlayerName == GameService.MyName;
             }
             else
             {

@@ -12,25 +12,27 @@ public interface IGameService
 {
     event EventHandler Disconnected;
     event EventHandler<SC_YourRole> OnYourRole;
-    event EventHandler<SC_YourTurn> OnYourTurn;
     event EventHandler<SC_Board> OnBoard;
     event EventHandler<SC_Result> OnResult;
     Task Login(IPAddress ip, int port, string name);
     Task Pick(char color);
+    string MyName { get; }
 }
 
 public class GameService : IGameService
 {
     public event EventHandler Disconnected;
     public event EventHandler<SC_YourRole> OnYourRole;
-    public event EventHandler<SC_YourTurn> OnYourTurn;
     public event EventHandler<SC_Board> OnBoard;
     public event EventHandler<SC_Result> OnResult;
 
     ISocketEx _connection;
     UserRole _myRole = UserRole.Spectator;
+
+    public string MyName { get; private set; }
     public async Task Login(IPAddress ip, int port, string name)
     {
+        MyName = name;
         try
         {
             _connection?.Close();
@@ -88,7 +90,6 @@ public class GameService : IGameService
             switch (packet)
             {
                 case SC_YourRole yourRolePacket: OnOnYourRole(yourRolePacket); break;
-                case SC_YourTurn yourTurnPacket: OnYourTurn?.Invoke(this, yourTurnPacket); break;
                 case SC_Board boardPacket: OnBoard?.Invoke(this, boardPacket); break;
                 case SC_Result resultPacket: OnResult?.Invoke(this, resultPacket); break;
                 default:

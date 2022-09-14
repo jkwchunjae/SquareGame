@@ -13,6 +13,5 @@ public enum PacketType
     SC_Pong,
     SC_YourRole,
     SC_Board,
-    SC_YourTurn,
     SC_Result,
 }

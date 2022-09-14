@@ -12,6 +12,7 @@ internal class GameRoom : IGameRoom
     private List<User> _users = new();
     private User? _player1;
     private User? _player2;
+    private User? _currentPlayer;
 
     private int _size = 15;
     private int _lastIndex => _size - 1;
@@ -31,7 +32,7 @@ internal class GameRoom : IGameRoom
         {
             if (_users.Any(u => u.Socket == socket))
             {
-                await SendBoard(socket);
+                await SendBoard(socket, _currentPlayer);
             }
 
             var user = new User(socket, playerName);
@@ -40,8 +41,6 @@ internal class GameRoom : IGameRoom
             {
                 _player1 = user;
                 await user.Socket.SendMessageAsync(new SC_YourRole { Role = UserRole.Player });
-
-                await StartGame(); // TEST
             }
             else if (_player2 == null)
             {
@@ -53,7 +52,7 @@ internal class GameRoom : IGameRoom
             else
             {
                 await user.Socket.SendMessageAsync(new SC_YourRole { Role = UserRole.Spectator });
-                await SendBoard(user.Socket);
+                await SendBoard(user.Socket, _currentPlayer);
             }
         }
     }
@@ -63,22 +62,23 @@ internal class GameRoom : IGameRoom
         _board = new Board();
         _board.CreateBaord(_size);
 
+        _currentPlayer = _player1;
         await _users
             .Select(async user =>
             {
-                await SendBoard(user.Socket);
+                await SendBoard(user.Socket, _player1);
             })
             .WhenAll();
-
-        await _player1!.Socket.SendMessageAsync(new SC_YourTurn());
     }
 
-    private async Task SendBoard(ISocketEx client)
+    private async Task SendBoard(ISocketEx client, User? current)
     {
+        Console.WriteLine($"Turn: {current?.Name}");
         await client.SendMessageAsync(new SC_Board
         {
             Cells = _board.GetBoard(),
             Width = _size,
+            CurrentPlayerName = current?.Name ?? string.Empty,
             Player1Name = _player1?.Name ?? string.Empty,
             Player1Color = _board.GetColor(0, 0),
             Player1Score = _board.GetArea(0, 0),
@@ -105,7 +105,9 @@ internal class GameRoom : IGameRoom
             await _users
                 .Select(async user =>
                 {
-                    await SendBoard(user.Socket);
+                    var nextUser = _player1?.Socket == socket ? _player2 : _player1;
+                    _currentPlayer = nextUser;
+                    await SendBoard(user.Socket, nextUser);
                 })
                 .WhenAll();
 
@@ -115,9 +117,6 @@ internal class GameRoom : IGameRoom
             }
             else
             {
-                var nextUser = _player1?.Socket == socket ? _player2 : _player1;
-                if (nextUser != null)
-                    await nextUser!.Socket.SendMessageAsync(new SC_YourTurn());
             }
         }
     }
