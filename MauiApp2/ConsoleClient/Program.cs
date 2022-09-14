@@ -49,6 +49,7 @@ gameService.OnBoard += (s, e) =>
     var isReverse = e.Player2Name == name;
     view.Board = new Board(e.Width, e.Cells, isReverse);
     view.IsMyTurn = e.CurrentPlayerName == name;
+    view.CurrentPlayerName = e.CurrentPlayerName;
     view.Player1Name = e.Player1Name;
     view.Player2Name = e.Player2Name;
     view.Player1Score = e.Player1Score;

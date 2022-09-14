@@ -10,6 +10,7 @@ internal class ViewModel
     public UserRole UserRole { get; set; }
     public bool IsMyTurn { get; set; }
     public Board? Board { get; set; }
+    public string? CurrentPlayerName { get; set; }
     public string? Player1Name { get; set; }
     public string? Player2Name { get; set; }
     public int Player1Score { get; set; }
@@ -32,19 +33,19 @@ internal class ViewModel
             if (UserRole == UserRole.Player)
             {
                 Console.WriteLine("당신은 플레이어입니다.               ");
+                if (IsMyTurn)
+                {
+                    Console.WriteLine("당신 차례입니다.               ");
+                }
+                else
+                {
+                    Console.WriteLine("상대방 차례입니다.              ");
+                }
             }
             else
             {
                 Console.WriteLine("당신은 관전자입니다.             ");
-            }
-
-            if (IsMyTurn)
-            {
-                Console.WriteLine("당신 차례입니다.               ");
-            }
-            else
-            {
-                Console.WriteLine("상대방 차례입니다.              ");
+                Console.WriteLine($"{CurrentPlayerName} 차례입니다.");
             }
 
             if (Board != null)
@@ -70,6 +71,7 @@ internal class ViewModel
 
             if (IsMyTurn)
             {
+                Console.WriteLine("                                                        ");
                 var colors = new[] { 'A', 'B', 'C', 'D', 'E', 'F' };
                 foreach (var color in colors)
                 {
@@ -84,6 +86,7 @@ internal class ViewModel
             }
             else
             {
+                Console.WriteLine("                                                        ");
                 Console.WriteLine("                                                        ");
                 Console.WriteLine("                                                        ");
             }

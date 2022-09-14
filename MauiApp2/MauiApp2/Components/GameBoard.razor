@@ -3,20 +3,24 @@
 @if (MyRole == Common.Packet.UserRole.Player)
 {
     <div>플레이어 입니다.</div>
+    @if (IsMyTurn)
+    {
+        <div>당신 차례입니다.</div>
+    }
+    else
+    {
+        <div>상대방 차례입니다.</div>
+    }
 }
 else
 {
     <div>관전자 입니다.</div>
+    @if (CurrentPlayerName != null)
+    {
+        <div>@CurrentPlayerName 차례입니다.</div>
+    }
 }
 
-@if (IsMyTurn)
-{
-    <div>당신 차례입니다.</div>
-}
-else
-{
-    <div>상대방 차례입니다.</div>
-}
 
 @if (Board != null)
 {

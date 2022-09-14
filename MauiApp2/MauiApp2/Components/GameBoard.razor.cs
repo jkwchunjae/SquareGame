@@ -10,6 +10,7 @@ public partial class GameBoard
     [Inject] IGameService GameService { get; set; }
 
     bool IsMyTurn = false;
+    string? CurrentPlayerName;
     UserRole MyRole = UserRole.Spectator;
     Board Board;
 
@@ -50,6 +51,7 @@ public partial class GameBoard
                 var isReverse = e.Player2Name == GameService.MyName;
                 Board = new Board(e.Width, e.Cells, isReverse);
                 IsMyTurn = e.CurrentPlayerName == GameService.MyName;
+                CurrentPlayerName = e.CurrentPlayerName;
             }
             else
             {
