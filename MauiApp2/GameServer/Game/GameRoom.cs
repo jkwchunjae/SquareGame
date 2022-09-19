@@ -18,6 +18,9 @@ internal class GameRoom : IGameRoom
     private int _lastIndex => _size - 1;
     private IBoard _board;
 
+    public event EventHandler OnGameStart;
+    public event EventHandler OnGameEnd;
+
     public async Task OnDisconnect(ISocketEx socket)
     {
         using (await _lock.LockAsync())
@@ -26,7 +29,7 @@ internal class GameRoom : IGameRoom
         }
     }
 
-    public async Task OnLogin(ISocketEx socket, string playerName)
+    public async Task Login(ISocketEx socket, string playerName)
     {
         using (await _lock.LockAsync())
         {
@@ -69,6 +72,8 @@ internal class GameRoom : IGameRoom
                 await SendBoard(user.Socket, _player1);
             })
             .WhenAll();
+
+        OnGameStart?.Invoke(this, null);
     }
 
     private async Task SendBoard(ISocketEx client, User? current)
@@ -88,7 +93,7 @@ internal class GameRoom : IGameRoom
         });
     }
 
-    public async Task OnPick(ISocketEx socket, char color)
+    public async Task Pick(ISocketEx socket, char color)
     {
         using (await _lock.LockAsync())
         {
@@ -98,6 +103,13 @@ internal class GameRoom : IGameRoom
                 return;
             if (_player1?.Socket != socket && _player2?.Socket != socket)
                 return;
+
+            if (color == _board.GetColor(0, 0) || color == _board.GetColor(_lastIndex, _lastIndex))
+            {
+                // await socket.SendMessageAsync(SC_Message: 본인의 색과 상대방의 색은 선택할 수 없습니다.);
+                await SendBoard(socket, _player1?.Socket == socket ? _player1 : _player2);
+                return;
+            }
 
             var position = _player1?.Socket == socket ? (0, 0) : (_lastIndex, _lastIndex);
             _board.ChangeColor(position.Item1, position.Item2, color);
@@ -151,5 +163,7 @@ internal class GameRoom : IGameRoom
         _player1 = null;
         _player2 = null;
         _users = new();
+
+        OnGameEnd?.Invoke(this, null);
     }
 }

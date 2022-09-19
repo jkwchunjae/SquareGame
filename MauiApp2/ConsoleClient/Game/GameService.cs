@@ -20,12 +20,12 @@ public interface IGameService
 
 public class GameService : IGameService
 {
-    public event EventHandler Disconnected;
-    public event EventHandler<SC_YourRole> OnYourRole;
-    public event EventHandler<SC_Board> OnBoard;
-    public event EventHandler<SC_Result> OnResult;
+    public event EventHandler? Disconnected;
+    public event EventHandler<SC_YourRole>? OnYourRole;
+    public event EventHandler<SC_Board>? OnBoard;
+    public event EventHandler<SC_Result>? OnResult;
 
-    ISocketEx _connection;
+    ISocketEx? _connection;
     UserRole _myRole = UserRole.Spectator;
     public async Task Login(IPAddress ip, int port, string name)
     {
@@ -60,6 +60,9 @@ public class GameService : IGameService
 
     public async Task Pick(char color)
     {
+        if (_connection == null)
+            return;
+
         if (_myRole == UserRole.Player)
         {
             await _connection.SendMessageAsync(new CS_Pick { Color = color });
@@ -70,27 +73,37 @@ public class GameService : IGameService
     {
         while (true)
         {
-            var (receiveCount, packet) = await _connection.ReceiveMessageAsync();
-            if (receiveCount == 0)
+            if (_connection == null)
+                return;
+
+            try
             {
-                if (_connection.Connected)
+                var (receiveCount, packet) = await _connection.ReceiveMessageAsync();
+                if (receiveCount == 0)
                 {
+                    if (_connection.Connected)
+                    {
 
-                }
-                else
-                {
+                    }
+                    else
+                    {
 
-                }
-                break;
-            }
-
-            switch (packet)
-            {
-                case SC_YourRole yourRolePacket: OnOnYourRole(yourRolePacket); break;
-                case SC_Board boardPacket: OnBoard?.Invoke(this, boardPacket); break;
-                case SC_Result resultPacket: OnResult?.Invoke(this, resultPacket); break;
-                default:
+                    }
                     break;
+                }
+
+                switch (packet)
+                {
+                    case SC_YourRole yourRolePacket: OnOnYourRole(yourRolePacket); break;
+                    case SC_Board boardPacket: OnBoard?.Invoke(this, boardPacket); break;
+                    case SC_Result resultPacket: OnResult?.Invoke(this, resultPacket); break;
+                    default:
+                        break;
+                }
+            }
+            catch
+            {
+                return;
             }
         }
     }
