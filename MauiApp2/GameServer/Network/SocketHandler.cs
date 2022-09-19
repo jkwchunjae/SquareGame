@@ -11,12 +11,12 @@ internal class SocketHandler : ISocketHandler
     public event EventHandler<ISocketEx>? OnDisconnect;
     public event EventHandler<(ISocketEx, PacketBase?)>? OnMessage;
 
-    public async Task Run(int port)
+    public async Task Run(int port, CancellationToken cancellationToken)
     {
-        await StartListening(port);
+        await StartListening(port, cancellationToken);
     }
 
-    private async Task StartListening(int port)
+    private async Task StartListening(int port, CancellationToken cancellationToken)
     {
         try
         {
@@ -28,13 +28,26 @@ internal class SocketHandler : ISocketHandler
 
             while (true)
             {
-                Console.WriteLine("Waiting for a connection....");
-                var client = await server.AcceptTcpClientAsync();
-                ISocketEx socketEx = new SocketTcp(client);
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+                try
+                {
+                    Console.WriteLine("Waiting for a connection....");
+                    var client = await server.AcceptTcpClientAsync(cancellationToken);
 
-                OnConnect?.Invoke(this, socketEx);
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
 
-                Task.Run(async () => await HandleConnection(socketEx));
+                    ISocketEx socketEx = new SocketTcp(client);
+
+                    OnConnect?.Invoke(this, socketEx);
+
+                    Task.Run(async () => await HandleConnection(socketEx, cancellationToken));
+                }
+                catch
+                {
+                    return;
+                }
             }
         }
         catch (Exception e)
@@ -43,32 +56,45 @@ internal class SocketHandler : ISocketHandler
         }
     }
 
-    private async Task HandleConnection(ISocketEx client)
+    private async Task HandleConnection(ISocketEx client, CancellationToken cancellationToken)
     {
         try
         {
             while (true)
             {
-                var (receiveCount, packet) = await client.ReceiveMessageAsync();
-
-                if (receiveCount == 0)
-                {
-                    Console.WriteLine("receive 0.");
-
-                    OnDisconnect?.Invoke(this, client);
+                if (cancellationToken.IsCancellationRequested)
                     return;
-                }
 
-                if (packet == default)
+                try
                 {
-                    client.Close();
-                    //await client.SendMessageAsync(new SC_System
-                    //{
-                    //    Data = "올바르지 않은 패킷입니다.",
-                    //});
-                }
+                    var (receiveCount, packet) = await client.ReceiveMessageAsync();
 
-                OnMessage?.Invoke(this, (client, packet));
+                    if (receiveCount == 0)
+                    {
+                        Console.WriteLine("receive 0.");
+
+                        OnDisconnect?.Invoke(this, client);
+                        return;
+                    }
+
+                    if (packet == default)
+                    {
+                        client.Close();
+                        //await client.SendMessageAsync(new SC_System
+                        //{
+                        //    Data = "올바르지 않은 패킷입니다.",
+                        //});
+                    }
+
+                    OnMessage?.Invoke(this, (client, packet));
+                }
+                catch
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                        return;
+
+                    throw;
+                }
             }
         }
         catch (SocketException ex)
