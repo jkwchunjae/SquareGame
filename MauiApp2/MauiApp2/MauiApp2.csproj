@@ -50,6 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BitterClient\BitterClient.csproj" />
       <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 

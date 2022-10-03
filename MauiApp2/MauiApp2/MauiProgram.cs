@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.WebView.Maui;
 using MauiApp2.Data;
 using MauiApp2.Game;
+using Microsoft.Extensions.Configuration;
+using BitterClient;
 
 namespace MauiApp2;
 
