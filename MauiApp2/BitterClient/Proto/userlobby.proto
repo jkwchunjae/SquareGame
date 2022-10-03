@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option csharp_namespace = "Slothy.Protocol.UserLobby";
+// namespace 로 구분하여 내부 data structure 와 외부 구분해보자.
+
+package slothy.userlobby;
+
+service UserLobbyApi {
+	// auth
+	rpc Authenticate(AuthReq) returns (AuthRes);
+	rpc GetUserProfile(GetUserProfileRequest) returns (UserProfileReponse);
+	// match
+	rpc Match(MatchRequest) returns (MatchResponse);
+	rpc GetMatchStatus(GetMatchStatusRequest) returns (MatchStatusResponse);
+}
+
+message AuthReq {
+	string userId = 1;
+}
+
+message AuthRes {
+	string token = 1;
+}
+
+message GetUserProfileRequest {
+}
+
+message UserProfileReponse {
+	string userId = 1;
+}
+
+message MatchRequest {
+}
+
+message MatchResponse {
+}
+
+message GetMatchStatusRequest {
+}
+
+message MatchStatusResponse {
+	string sessionId = 1;
+}
+

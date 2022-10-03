@@ -1,0 +1,9 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Slothy.Protocol.Base";
+
+package slothy.base;
+
+message PbUserId {
+  string id = 1;
+}
