@@ -1,8 +1,42 @@
 ﻿<h3>ServerConnection</h3>
 
-<input @bind-value="IpAddress" placeholder="localhost"/>
-<input @bind-value="Port" placeholder="port"/>
-<input @bind-value="Name" placeholder="이름"/>
+<div>
+    <div>
+        <h5>Lobby</h5>
+    </div>
+    <input @bind-value="BitterLobbyIpAddress" placeholder="localhost"/>
+    <input @bind-value="BitterLobbyPort" placeholder="port"/>
+    <input @bind-value="Name" placeholder="이름"/>
 
-<button @onclick="@(() => Login())">접속!</button>
+    @if (IsLogin)
+    {
+        @if (!string.IsNullOrEmpty(UserId))
+        {
+            <button><span>@UserId</span>님 안녕하세요!</button>
+        }
+        <button @onclick="@(() => RequestMatch())">매치 시작</button>
+    }
+    else
+    {
+        <button @onclick="@(() => Login())">접속!</button>
+    }
+</div>
+
+<div>
+    <div>
+        <h5>GameServer</h5>
+    </div>
+    <input @bind-value="GameServerIpAddress" placeholder="localhost"/>
+    <input @bind-value="GameServerPort" placeholder="port"/>
+    <input @bind-value="Name" placeholder="이름"/>
+
+    @if (BitterUserLobby == null)
+    {
+        <button @onclick="@(() => ConnectGameServer())">Connect GameServer directly</button>
+    }
+    else
+    {
+        <button @onclick="@(() => GameServerIsReady())">GameServer is Ready!</button>
+    }
+</div>
 

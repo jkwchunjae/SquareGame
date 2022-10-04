@@ -36,9 +36,13 @@ message MatchResponse {
 }
 
 message GetMatchStatusRequest {
+	string testIp = 1;
+	int32 testPort = 2;
 }
 
 message MatchStatusResponse {
 	string sessionId = 1;
+	string ipAddress = 2;
+	int32 port = 3;
 }
 
