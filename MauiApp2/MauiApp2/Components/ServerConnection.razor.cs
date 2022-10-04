@@ -27,6 +27,7 @@ public partial class ServerConnection
     private string _authToken = null;
     private bool IsLogin => !string.IsNullOrEmpty(_authToken);
     private string UserId;
+    private bool _matched = false;
 
     protected override void OnInitialized()
     {
@@ -75,8 +76,13 @@ public partial class ServerConnection
         var status = await BitterUserLobby.GetMatchStatusAsync(request);
         if (!string.IsNullOrEmpty(status.IpAddress))
         {
-            var ip = status.IpAddress == "localhost" ? IPAddress.Loopback : IPAddress.Parse(status.IpAddress);
+            if (_matched)
+                return;
 
+            _matchStatusTimer.Stop();
+            _matched = true;
+
+            var ip = status.IpAddress == "localhost" ? IPAddress.Loopback : IPAddress.Parse(status.IpAddress);
             await GameService.Login(ip, status.Port, Name);
         }
     }

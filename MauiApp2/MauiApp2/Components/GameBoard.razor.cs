@@ -55,6 +55,8 @@ public partial class GameBoard
             }
             else
             {
+                IsMyTurn = e.CurrentPlayerName == GameService.MyName;
+                CurrentPlayerName = e.CurrentPlayerName;
                 Board.Update(e.Cells);
             }
             StateHasChanged();
