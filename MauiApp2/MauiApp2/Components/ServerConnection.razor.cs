@@ -22,7 +22,6 @@ public partial class ServerConnection
 
     private string GameServerIpAddress = "localhost";
     private string GameServerPort = "55300";
-    private bool _gameServerIsReady = false;
 
     private string _authToken = null;
     private bool IsLogin => !string.IsNullOrEmpty(_authToken);
@@ -55,7 +54,6 @@ public partial class ServerConnection
 
     private async Task RequestMatch()
     {
-        _gameServerIsReady = false;
         await BitterUserLobby.MatchAsync(new());
 
         if (_matchStatusTimer != null)
@@ -68,11 +66,7 @@ public partial class ServerConnection
 
     private async Task CheckMatchStatus()
     {
-        MatchStatusRequest request = _gameServerIsReady ? new MatchStatusRequest
-        {
-            TestIpAddress = GameServerIpAddress,
-            TestPort = GameServerPort.ToInt(),
-        } : new();
+        MatchStatusRequest request = new();
         var status = await BitterUserLobby.GetMatchStatusAsync(request);
         if (!string.IsNullOrEmpty(status.IpAddress))
         {
@@ -85,11 +79,6 @@ public partial class ServerConnection
             var ip = status.IpAddress == "localhost" ? IPAddress.Loopback : IPAddress.Parse(status.IpAddress);
             await GameService.Login(ip, status.Port, Name);
         }
-    }
-
-    private void GameServerIsReady()
-    {
-        _gameServerIsReady = true;
     }
 
     private async Task ConnectGameServer()

@@ -36,8 +36,6 @@ message MatchResponse {
 }
 
 message GetMatchStatusRequest {
-	string testIp = 1;
-	int32 testPort = 2;
 }
 
 message MatchStatusResponse {
