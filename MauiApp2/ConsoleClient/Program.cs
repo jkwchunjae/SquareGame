@@ -1,7 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using BitterClient;
-using BitterClient.Model;
 using CommandLine;
 using ConsoleClient;
 using ConsoleClient.Game;
