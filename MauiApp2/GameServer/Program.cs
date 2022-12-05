@@ -12,6 +12,8 @@ Console.WriteLine("Hello, World!");
 
 Func<int, CancellationTokenSource, Task> main = async (port, cts) =>
 {
+    Console.WriteLine($"Start SquareGame server: {port}");
+
     IGameRoom gameRoom = new GameRoom();
     ISocketHandler socketHandler = new SocketHandler();
     socketHandler.OnConnect += (_, e) =>

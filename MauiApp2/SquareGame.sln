@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiApp2", "MauiApp2\MauiApp2.csproj", "{1F7BBEEC-C9D9-4D4A-B6D3-F675A1AD559F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameServer", "GameServer\GameServer.csproj", "{A6E9B291-DE42-4CF6-AFF7-92B1CB199516}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{3B4B751C-7E0B-45B3-BA1C-102D4F05EE0B}"
@@ -14,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Test", "Common.Test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{D8270C40-CA69-4567-BCDE-446D2375A58F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitterClient", "BitterClient\BitterClient.csproj", "{D3556F34-F493-4910-A47B-1D7AF6A25DA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitterClient", "BitterClient\BitterClient.csproj", "{D3556F34-F493-4910-A47B-1D7AF6A25DA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,12 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1F7BBEEC-C9D9-4D4A-B6D3-F675A1AD559F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F7BBEEC-C9D9-4D4A-B6D3-F675A1AD559F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1F7BBEEC-C9D9-4D4A-B6D3-F675A1AD559F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{1F7BBEEC-C9D9-4D4A-B6D3-F675A1AD559F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F7BBEEC-C9D9-4D4A-B6D3-F675A1AD559F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1F7BBEEC-C9D9-4D4A-B6D3-F675A1AD559F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{A6E9B291-DE42-4CF6-AFF7-92B1CB199516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6E9B291-DE42-4CF6-AFF7-92B1CB199516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6E9B291-DE42-4CF6-AFF7-92B1CB199516}.Release|Any CPU.ActiveCfg = Release|Any CPU
