@@ -13,6 +13,7 @@
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="Websocket.Client" Version="4.4.43" />
+    <PackageReference Include="AgonesSDK" Version="1.29.0" />
   </ItemGroup>
 
   <ItemGroup>
