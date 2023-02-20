@@ -7,6 +7,7 @@ namespace GameServer.Network;
 
 internal class SocketHandler : ISocketHandler
 {
+    public event EventHandler? OnStart;
     public event EventHandler<ISocketEx>? OnConnect;
     public event EventHandler<ISocketEx>? OnDisconnect;
     public event EventHandler<(ISocketEx, PacketBase?)>? OnMessage;
@@ -26,6 +27,8 @@ internal class SocketHandler : ISocketHandler
             TcpListener server = new TcpListener(ipAddress, port);
             server.Start();
 
+            OnStart?.Invoke(this, new());
+
             while (true)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -42,7 +45,7 @@ internal class SocketHandler : ISocketHandler
 
                     OnConnect?.Invoke(this, socketEx);
 
-                    Task.Run(async () => await HandleConnection(socketEx, cancellationToken));
+                    _ = Task.Run(async () => await HandleConnection(socketEx, cancellationToken));
                 }
                 catch
                 {
