@@ -7,71 +7,52 @@ using GameServer;
 using GameServer.Game;
 using GameServer.MainShardProxy;
 using GameServer.Network;
+using Agones;
 
 Console.WriteLine("Hello, World!");
 
-Func<int, CancellationTokenSource, Task> main = async (port, cts) =>
+var useAgones = Environment.GetEnvironmentVariable("AGONES")?.ToUpper() == "TRUE";
+
+if (useAgones)
 {
-    Console.WriteLine($"Start SquareGame server: {port}");
-
-    IGameRoom gameRoom = new GameRoom();
-    ISocketHandler socketHandler = new SocketHandler();
-    socketHandler.OnConnect += (_, e) =>
-    {
-        Console.WriteLine("Client connected !!");
-    };
-    socketHandler.OnMessage += async (_, e) =>
-    {
-        var (client, packetBase) = e;
-        switch (packetBase)
+    var agonesSdk = new AgonesSDK();
+    CancellationTokenSource gameEndTokenSource = new CancellationTokenSource();
+    var server = new AgonesSupportServer(agonesSdk, gameEndTokenSource);
+    await server.RunMain();
+}
+else
+{
+    await Parser.Default.ParseArguments<CommandOptions>(args)
+        .WithParsedAsync(async (cmd) =>
         {
-            case CS_Ping pingPacket: await Ping(client, pingPacket); break;
-            case CS_Login loginPacket: await gameRoom.Login(client, loginPacket!.Name!); break;
-            case CS_Pick pickPacket: await gameRoom.Pick(client, pickPacket.Color); break;
-            default: break;
-        }
-    };
-
-    gameRoom.OnGameEnd += (_, _) =>
-    {
-        cts.Cancel();
-    };
-
-    await socketHandler.Run(port, cts.Token);
-
-    async Task Ping(ISocketEx client, CS_Ping pingPacket)
-    {
-        await client.SendMessageAsync(new SC_Pong { Value = pingPacket.Value });
-    }
-};
-
-await Parser.Default.ParseArguments<CommandOptions>(args)
-    .WithParsedAsync(async (cmd) =>
-    {
-        CancellationTokenSource gameEndTokenSource = new CancellationTokenSource();
-        if (cmd.Standalone)
-        {
-            await main(cmd.Port, gameEndTokenSource);
-        }
-        else
-        {
-            SlaveServer gameSessionServer = new SlaveServer(new Uri(cmd.GameShardWebsocketServerUrl));
-            gameSessionServer!.OnInitialize += async (_, initData) =>
+            CancellationTokenSource gameEndTokenSource = new CancellationTokenSource();
+            if (cmd.Standalone)
             {
-                await main(initData.Port, gameEndTokenSource);
-            };
-
-            await gameSessionServer.ConnectAsync();
-
-            while (true)
+                var server = new StandaloneServer(cmd.Port, gameEndTokenSource);
+                await server.RunMain();
+            }
+            else
             {
-                await Task.Delay(TimeSpan.FromSeconds(1));
-                if (gameEndTokenSource.IsCancellationRequested)
+                SlaveServer gameSessionServer = new SlaveServer(new Uri(cmd.GameShardWebsocketServerUrl));
+                gameSessionServer!.OnInitialize += async (_, initData) =>
                 {
-                    await gameSessionServer.GameEndAsync();
-                    break;
+                    var server = new StandaloneServer(initData.Port, gameEndTokenSource);
+                    await server.RunMain();
+                };
+
+                await gameSessionServer.ConnectAsync();
+
+                while (true)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    if (gameEndTokenSource.IsCancellationRequested)
+                    {
+                        await gameSessionServer.GameEndAsync();
+                        break;
+                    }
                 }
             }
-        }
-    });
+        });
+}
+
 

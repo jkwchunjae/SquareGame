@@ -11,4 +11,6 @@ public class CommandOptions
     public int Port { get; set; }
     [Option('u', "url", Required = false)]
     public string GameShardWebsocketServerUrl { get; set; }
+    [Option('a', "agones", Required = false, Default = false)]
+    public bool UseAgones { get; set; }
 }
